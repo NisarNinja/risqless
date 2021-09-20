@@ -20,6 +20,8 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes,HasApiTokens;
 
+    protected $NumberOfTrialDays = 7;
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -73,4 +75,10 @@ class User extends Authenticatable
         return $this->hasMany(Device::class);
     }
 
+    public function activateTrial(){
+
+        $this->trial_ends_at = now()->addDays($this->NumberOfTrialDays)->format('Y-m-d H:i:s');
+        $this->save();
+        
+    }
 }

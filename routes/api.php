@@ -39,6 +39,8 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
     });
 
     Route::get('notifications','NotificationController@index');
+
+    Route::get('in-app-purchase-status','InAppPurchaseController@statusUpdate');
 });
 
 // Route::get('file',[HomeController::class,'fileAPI']);

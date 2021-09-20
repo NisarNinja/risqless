@@ -1,21 +1,22 @@
 <?php 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Password;
-use Socialite;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Auth;
-use Laravel\Cashier\Cashier;
-use \Stripe\Stripe;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
-use Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Laravel\Cashier\Cashier;
+use Mail;
+use Socialite;
+use \Stripe\Stripe;
 
 class AuthController extends Controller
 {  
@@ -74,7 +75,7 @@ class AuthController extends Controller
             $this->storeDevice($request->device_id,$user);
 
             $response["header"]["return_flag"]="true";
-            $response["data"]=$user;
+            $response["data"] = new UserResource($user);
     
             }else{
                 $response["header"]["error_detail"]="Credentials are invalid";
@@ -243,6 +244,9 @@ class AuthController extends Controller
                 'role' => 'subscriber',
                 'company' => $request->input('company'),
             ]);
+
+            $user->activateTrial();
+
             $email_data = array(
                 'name' => $request->input('fname'),
                 'email' => $request->input('email'),
@@ -384,6 +388,8 @@ class AuthController extends Controller
                 $newUser->role            = 'subscriber';
     
                 $newUser->save();
+
+                $newUser->activateTrial();
                     
                 $this->storeDevice($request->device_id,$newUser);
 
@@ -495,6 +501,7 @@ class AuthController extends Controller
                     'role' => 'subscriber',
                 ]);
 
+                $createUser->activateTrial();
                 $this->storeDevice($request->device_id,$createUser);
 
                 $name = explode(" ", $request->name);
@@ -587,6 +594,8 @@ class AuthController extends Controller
                     'original_avatar'=>$request->original_avatar,
                     'role' => 'subscriber',
                 ]);
+
+                $createUser->activateTrial();
 
                 $this->storeDevice($request->device_id,$createUser);
 
