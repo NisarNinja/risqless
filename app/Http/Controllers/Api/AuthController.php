@@ -257,7 +257,7 @@ class AuthController extends Controller
                     ->from('info@risqless.ai', 'Risqless');
             });
            $response["header"]["return_flag"]="true";
-           $response["data"]=$user;
+           $response["data"]= new UserResource($user);
         }
         return response()->json($response);
     }
@@ -376,7 +376,7 @@ class AuthController extends Controller
 
                 $this->storeDevice($request->device_id,$existingUser);
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$existingUser;
+                $response["data"]= new UserResource($existingUser);
             } else {
                 // create a new user
                 $newUser                  = new User;
@@ -441,7 +441,7 @@ class AuthController extends Controller
     
                 curl_close ($ch);
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$newUser;
+                $response["data"]= new UserResource($newUser);
             }
         }
         return response()->json($response);
@@ -490,7 +490,7 @@ class AuthController extends Controller
                 $this->storeDevice($request->device_id,$existingUser);
 
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$existingUser;
+                $response["data"]= new UserResource($existingUser);
             }else{
                 $createUser = User::create([
                     'name' => $request->name,
@@ -544,7 +544,7 @@ class AuthController extends Controller
                 }
                 curl_close ($ch);
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$existingUser;
+                $response["data"]= new UserResource($existingUser);
             }
         }
         return response()->json($response);
@@ -584,7 +584,7 @@ class AuthController extends Controller
                 $this->storeDevice($request->device_id,$existingUser);
 
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$existingUser;
+                $response["data"]= new UserResource($existingUser);
             }else{
                 $createUser = User::create([
                     'name' => $request->name,
@@ -639,7 +639,7 @@ class AuthController extends Controller
                 }
                 curl_close ($ch);
                 $response["header"]["return_flag"]="true";
-                $response["data"]=$existingUser;
+                $response["data"]= new UserResource($existingUser);
             }
         }
         return response()->json($response);
