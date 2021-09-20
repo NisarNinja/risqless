@@ -1,0 +1,1 @@
+[19-Apr-2021 16:20:04 UTC] PHP Fatal error:  Cannot use traits inside of interfaces. Billable is used in Laravel\Socialite\Contracts\User in /home/p3k06ce0ed0e/public_html/vendor/laravel/socialite/src/Contracts/User.php on line 9
