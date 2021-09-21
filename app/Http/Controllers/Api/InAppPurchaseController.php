@@ -15,7 +15,7 @@ class InAppPurchaseController extends Controller
 
         $log = new Log;
         $log->type = 'STATUS_CHANGE';
-        $log->log  = $request->all();
+        $log->log  = json_encode($request->all());
         $log->save();
     }
 }
