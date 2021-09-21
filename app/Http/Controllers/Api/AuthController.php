@@ -667,7 +667,7 @@ class AuthController extends Controller
         $user = User::where('user_id',$request->user_id)->first();
 
         if($user){
-            $user = $user->activateTrial(); = 
+            $user = $user->activateTrial();
         }
 
         return new UserResource($user);
