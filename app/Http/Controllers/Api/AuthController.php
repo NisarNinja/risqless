@@ -664,7 +664,7 @@ class AuthController extends Controller
 
     public function activateTrial(Request $request){
 
-        $user = User::where('user_id',$request->user_id)->first();
+        $user = User::where('id',$request->user_id)->first();
 
         if($user){
             $user = $user->activateTrial();

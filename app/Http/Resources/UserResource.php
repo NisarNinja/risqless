@@ -35,7 +35,7 @@ class UserResource extends JsonResource
         $array = parent::toArray($request);
         $array['is_subscription_active'] = $is_subscription_active;
         $array['is_trial_active'] = $is_trial_active;
-        $array['trial_ends_at'] = $trial_ends_at ?? "";
+        $array['trial_ends_at'] = $trial_ends_at ? Carbon::parse($trial_ends_at)->format('Y-m-d H:i:s') : "";
 
         return $array;
     }
