@@ -31,6 +31,8 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
         Route::post('facebook-login','AuthController@loginWithFacebook');
         Route::post('google-login','AuthController@googleLogin');
         Route::post('apple-login','AuthController@appleLogin');
+
+        Route::post('forget-password','AuthController@sendResetLinkEmail');
     });
     
     Route::group(['prefix' =>'file'], function () {

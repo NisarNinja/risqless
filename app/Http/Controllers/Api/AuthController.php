@@ -674,4 +674,45 @@ class AuthController extends Controller
         
     }
 
+    // Overiding the Trait Method
+    public function sendResetLinkEmail(Request $request)
+    {
+
+        $validator =  Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+           $response["header"]["return_flag"]="X";
+           $response["header"]["error_detail"]="validation error";
+           $response["header"]["errors"] = $validator->messages();
+        }
+
+        $user = User::where('email',$request->only('email'))->first();
+        if(!$user){
+            
+           $response["header"]["return_flag"]="X";
+           $response["header"]["error_detail"]="validation error";
+           $response["header"]["errors"] = [
+            'email' => "Email doesn't exists."
+           ];
+             
+        }
+
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $response = $this->broker()->sendResetLink(
+            $request->only('email')
+        );
+        
+        $response["header"]["return_flag"] = "1";
+        $response["header"]["error_detail"] = "You will get recovery e-mail shortly";
+        $response["header"]["errors"] = (object)[];
+
+        return $response;
+        
+    }
+
 }
