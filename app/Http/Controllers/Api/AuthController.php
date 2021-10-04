@@ -671,10 +671,8 @@ class AuthController extends Controller
         }
 
        $response["header"]["return_flag"]="1";
-       $response["header"]["error_detail"]="validation error";
-       $response["header"]["errors"] = [
-        'email' => "Email doesn't exists."
-       ];
+       $response["header"]["error_detail"]="";
+       $response["header"]["errors"] = (Object)[];
 
        $response['data'] = new UserResource($user);
 
