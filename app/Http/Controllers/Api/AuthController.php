@@ -676,7 +676,9 @@ class AuthController extends Controller
         'email' => "Email doesn't exists."
        ];
 
-       return $response['header']['data'] = new UserResource($user);
+       $response['data'] = new UserResource($user);
+
+       return $response;
 
     }
 
