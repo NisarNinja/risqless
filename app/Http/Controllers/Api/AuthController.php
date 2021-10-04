@@ -670,8 +670,14 @@ class AuthController extends Controller
             $user = $user->activateTrial();
         }
 
-        return new UserResource($user);
-        
+       $response["header"]["return_flag"]="1";
+       $response["header"]["error_detail"]="validation error";
+       $response["header"]["errors"] = [
+        'email' => "Email doesn't exists."
+       ];
+
+       return $response['header']['data'] = new UserResource($user);
+
     }
 
     // Overiding the Trait Method
