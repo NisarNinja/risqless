@@ -20,6 +20,7 @@ use \Stripe\Stripe;
 
 class AuthController extends Controller
 {  
+    use SendsPasswordResetEmails;
     use AuthenticatesUsers;
 
     /**
