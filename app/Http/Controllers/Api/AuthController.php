@@ -7,7 +7,6 @@ use App\Models\User;
 use Auth;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +20,6 @@ use \Stripe\Stripe;
 
 class AuthController extends Controller
 {  
-    use SendsPasswordResetEmails;
     use AuthenticatesUsers;
 
     /**
@@ -704,10 +702,10 @@ class AuthController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $response = $this->broker()->sendResetLink(
+        $response = Password::broker()->broker()->sendResetLink(
             $request->only('email')
         );
-        
+ 
         $response["header"]["return_flag"] = "1";
         $response["header"]["error_detail"] = "You will get recovery e-mail shortly.";
         $response["header"]["errors"] = (object)[];
