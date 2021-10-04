@@ -7,6 +7,7 @@ use App\Models\User;
 use Auth;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
