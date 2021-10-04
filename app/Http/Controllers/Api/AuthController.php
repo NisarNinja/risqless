@@ -699,7 +699,6 @@ class AuthController extends Controller
              
         }
 
-
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
@@ -708,11 +707,11 @@ class AuthController extends Controller
         );
         
         $response["header"]["return_flag"] = "1";
-        $response["header"]["error_detail"] = "You will get recovery e-mail shortly";
+        $response["header"]["error_detail"] = "You will get recovery e-mail shortly.";
         $response["header"]["errors"] = (object)[];
 
         return $response;
-        
+
     }
 
 }
