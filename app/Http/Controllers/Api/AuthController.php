@@ -682,6 +682,11 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255'],
         ]);
 
+        $response=[];
+        $response["header"]["return_flag"]="X";
+        $response["header"]["error_detail"]="";
+        $response["header"]["errors"] = (object)[];
+
         if ($validator->fails()) {
            $response["header"]["return_flag"]="X";
            $response["header"]["error_detail"]="validation error";
@@ -702,7 +707,7 @@ class AuthController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $response = Password::broker()->sendResetLink(
+        $reset_link = Password::broker()->sendResetLink(
             $request->only('email')
         );
  
