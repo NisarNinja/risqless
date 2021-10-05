@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +19,7 @@ use Socialite;
 use \Stripe\Stripe;
 
 class AuthController extends Controller
-{  
+{
     use AuthenticatesUsers;
 
     /**
@@ -33,20 +33,20 @@ class AuthController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    
+
     public function show_login_form()
     {
         return view('user.pages.login');
     }
     public function login(Request $request)
     {
-        
+
         $response=[];
         $response["header"]["return_flag"]="X";
         $response["header"]["error_detail"]="";
         $response["header"]["errors"] = [];
         $response["data"]= (object) array();
-        
+
          $rules = [
             'email'=>'required|email',
             // 'password' => 'required|min:6|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
@@ -67,16 +67,16 @@ class AuthController extends Controller
         {
 
             $credentials = ['email' => $request->email, 'password' => $request->password];
-        
+
             $user = User::where('email',$request->email)->first();
-                
+
             if (auth()->attempt($credentials)) {
-                
+
             $this->storeDevice($request->device_id,$user);
 
             $response["header"]["return_flag"]="true";
             $response["data"] = new UserResource($user);
-    
+
             }else{
                 $response["header"]["error_detail"]="Credentials are invalid";
             }
@@ -114,12 +114,12 @@ class AuthController extends Controller
             )
         );
         $post_json = json_encode($arr);
-        
+
         $hapikey = "d18e851d-d8e1-451c-b4b6-6dfd135aeca3";
         $endpoint = 'https://api.hubapi.com/contacts/v1/contact?hapikey=' . $hapikey;
 
         $ch = curl_init();
-        
+
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
         curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -144,7 +144,7 @@ class AuthController extends Controller
        $stripe = new \Stripe\StripeClient($key);
        $plansraw = $stripe->plans->all();
        $plans = $plansraw->data;
-       
+
        foreach($plans as $plan) {
            $prod = $stripe->products->retrieve(
                $plan->product,[]
@@ -155,18 +155,18 @@ class AuthController extends Controller
    }
 
     public function show_signup_form()
-    {   
+    {
         $plans = $this->retrievePlans();
         $user = new User;
         $intent = $user->createSetupIntent();
-        return view('user.pages.register', [ 
+        return view('user.pages.register', [
             'intent' => $intent,
             'plans' => $plans,
         ]);
     }
     public function process_signup(Request $request)
-    {   
-        
+    {
+
         $response=[];
          $response["header"]["return_flag"]="X";
          $response["header"]["error_detail"]="";
@@ -192,7 +192,7 @@ class AuthController extends Controller
              'password.regex'=>'Password must contain at least one lowercase , one uppercase, one number and one symbol',
         ];
 
-       
+
         $validator = Validator::make($request->all(), $rules,$messages);
         if ($validator->fails()) {
            $response["header"]["return_flag"]="X";
@@ -218,12 +218,12 @@ class AuthController extends Controller
             )
         );
             $post_json = json_encode($arr);
-            
+
             $hapikey = "d18e851d-d8e1-451c-b4b6-6dfd135aeca3";
             $endpoint = 'https://api.hubapi.com/contacts/v1/contact?hapikey=' . $hapikey;
-        
+
             $ch = curl_init();
-            
+
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
             curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -231,7 +231,7 @@ class AuthController extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $responsee = curl_exec($ch);
             if (curl_errno($ch)) {
-        
+
                 print_r(curl_error($ch));
                 exit;
             }
@@ -286,7 +286,7 @@ class AuthController extends Controller
                         ? back()->with(['status' => __($status)])
                         : back()->withErrors(['email' => __($status)]);
     }
-    
+
     public function show_reset_form(Request $request)
     {
         $token = $request->token;
@@ -300,9 +300,9 @@ class AuthController extends Controller
          $rules = [
             'token' => 'required',
             'email' => 'required|email',
-            // 'password' => ['required', 
-            //    'min:6', 
-            //    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/', 
+            // 'password' => ['required',
+            //    'min:6',
+            //    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
             //    'confirmed',
             //    'required_with:password_confirmation',
             //    'same:password_confirmation'],
@@ -333,7 +333,7 @@ class AuthController extends Controller
                 : back()->withErrors(['email' => [__($status)]]);
     }
 
-    // Google Login 
+    // Google Login
     /**
   * Redirect the user to the Google authentication page.
   *
@@ -346,7 +346,7 @@ class AuthController extends Controller
      */
     public function googleLogin(Request $request)
     {
-        
+
         $response=[];
         $response["header"]["return_flag"]="X";
         $response["header"]["error_detail"]="";
@@ -355,7 +355,7 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required',
             'email'=>'required|email',
-            'google_id'=>'required', 
+            'google_id'=>'required',
         ];
         $messages=[
              'name.required' => 'Name is Required',
@@ -370,7 +370,7 @@ class AuthController extends Controller
            $response["header"]["errors"] = $validator->messages();
         }
         else{
-      
+
             $existingUser = User::where('email', $request->email)->first();
             if($existingUser){
 
@@ -386,18 +386,18 @@ class AuthController extends Controller
                 $newUser->avatar          = $request->avatar;
                 $newUser->avatar_original = $request->avatar_original;
                 $newUser->role            = 'subscriber';
-    
+
                 $newUser->save();
 
                 $newUser->activateTrial();
-                    
+
                 $this->storeDevice($request->device_id,$newUser);
 
                 // Storing Contacts in Hubspot
                 $name = explode(" ", $request->name);
                 $fname = $name[0];
                 $lname = $name[1];
-    
+
                 $arr = array(
                     'properties' => array(
                         array(
@@ -419,26 +419,26 @@ class AuthController extends Controller
                     )
                 );
                 $post_json = json_encode($arr);
-                
+
                 $hapikey = "d18e851d-d8e1-451c-b4b6-6dfd135aeca3";
                 $endpoint = 'https://api.hubapi.com/contacts/v1/contact?hapikey=' . $hapikey;
-    
-    
+
+
                 $ch = curl_init();
-                
+
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
                 curl_setopt($ch, CURLOPT_URL, $endpoint);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $response = curl_exec($ch);
-    
+
                 if (curl_errno($ch)) {
-    
+
                     print_r(curl_error($ch));
                     exit;
                 }
-    
+
                 curl_close ($ch);
                 $response["header"]["return_flag"]="true";
                 $response["data"]= new UserResource($newUser);
@@ -450,7 +450,7 @@ class AuthController extends Controller
 
 
     /**
-     * 
+     *
      *
      * @param      \Illuminate\Http\Request  $request  The request
      *
@@ -467,7 +467,7 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required',
             'email'=>'required|email',
-            'facebook_id'=>'required', 
+            'facebook_id'=>'required',
         ];
         $messages=[
              'name.required' => 'Name is Required',
@@ -561,7 +561,7 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required',
             'email'=>'required|email',
-            'apple_id'=>'required', 
+            'apple_id'=>'required',
         ];
         $messages=[
              'name.required' => 'Name is Required',
@@ -659,7 +659,7 @@ class AuthController extends Controller
                 'device_id' => $device
             ]);
         }
-        
+
     }
 
     public function activateTrial(Request $request){
@@ -697,17 +697,19 @@ class AuthController extends Controller
            $response["header"]["return_flag"]="X";
            $response["header"]["error_detail"]="validation error";
            $response["header"]["errors"] = $validator->messages();
+
+           return $response;
         }
 
         $user = User::where('email',$request->only('email'))->first();
         if(!$user){
-            
+
            $response["header"]["return_flag"]="X";
            $response["header"]["error_detail"]="validation error";
            $response["header"]["errors"] = [
             'email' => "Email doesn't exists."
            ];
-             
+
         }
 
         // We will send the password reset link to this user. Once we have attempted
@@ -716,7 +718,7 @@ class AuthController extends Controller
         $reset_link = Password::broker()->sendResetLink(
             $request->only('email')
         );
- 
+
         $response["header"]["return_flag"] = "1";
         $response["header"]["error_detail"] = "You will get recovery e-mail shortly.";
         $response["header"]["errors"] = (object)[];
