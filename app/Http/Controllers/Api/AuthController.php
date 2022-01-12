@@ -631,7 +631,7 @@ class AuthController extends Controller
                 curl_setopt($ch, CURLOPT_URL, $endpoint);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $response = curl_exec($ch);
+                /* $response = */ curl_exec($ch);
                 if (curl_errno($ch)) {
 
                     print_r(curl_error($ch));
