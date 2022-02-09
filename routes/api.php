@@ -20,7 +20,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('test',function(){
-     echo "workring";
+    //fcm notification
+    try {
+        return fcm()
+            ->to([
+                'dtlqHKzrQGqc8-4FZB78OM:APA91bE8HxXe9HJKVBLb7r5PvxurMAlXxtQY1COl-6ii1DlbFxIk58HF9aUQNW9rpwiVcs8Mikod1s-XRrrraLkU6rZYsCEPIUTWpnQriN02kXdS2f5lW0DbPWGUKHgluOvWDh5Mjlia',
+            ])
+            ->priority('high')
+            ->timeToLive(0)
+            ->data([
+                'title' => 'Test Notification',
+                'body' => 'This is a test notification',
+            ])->notification([
+                'title' => 'Test Notification',
+                'body' => 'This is a test notification',
+            ])
+        ->send();
+    } catch (\Exception $e) {
+        dd($e->getMessage( ));
+    }
 });
 Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
 {

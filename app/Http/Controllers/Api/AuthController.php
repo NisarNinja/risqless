@@ -668,6 +668,13 @@ class AuthController extends Controller
 
         if($user){
             $user = $user->activateTrial();
+
+            // Send Push Notification
+            $this->fcm(
+                $this->getUserDevices($user->id),
+                'Congratulations',
+                'Your have successfully subscribed to the trial plan'
+            );
         }
 
        $response["header"]["return_flag"]="1";
