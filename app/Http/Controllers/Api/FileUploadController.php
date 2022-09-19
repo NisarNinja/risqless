@@ -87,7 +87,7 @@ class FileUploadController extends Controller
             }
     
             curl_close ($ch);
-    
+            dd($responsed);
             $id = $responsed->idStatement;
     
             // Extacting Results Fee Navigator.
