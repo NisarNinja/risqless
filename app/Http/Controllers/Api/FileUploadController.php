@@ -87,7 +87,11 @@ class FileUploadController extends Controller
             }
     
             curl_close ($ch);
-            dd($responsed);
+            // dd($responsed);
+            $response["header"]["error_detail"]="File Upload Response";
+            $response["header"]["errors"] =$responsed;
+            return response()->json($response);
+
             $id = $responsed->idStatement;
     
             // Extacting Results Fee Navigator.
