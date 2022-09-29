@@ -67,7 +67,7 @@ class FileUploadController extends Controller
                 'contents' => $file_curl,
                 'pdf' => $file_curl,
             ];
-    
+
             // submitting statement Fee Navigator.
             $ch = curl_init();
             curl_setopt( $ch , CURLOPT_URL , 'https://developer.feenavigator.com/api/v1/statements/upload');
@@ -87,13 +87,16 @@ class FileUploadController extends Controller
             }
     
             curl_close ($ch);
-            // dd($responsed);
-            $response["header"]["error_detail"]="File Upload Response";
-            $response["header"]["errors"] =$responsed;
-            return response()->json($response);
-
-            $id = $responsed->idStatement;
+                
     
+            if( isset($responsed->error) && $responsed->code == 500){
+                $response["header"]["error_detail"]= $responsed->error[0];
+                $response["header"]["errors"] = $responsed->error ;
+                return response()->json($response);
+            }
+           
+            $id = $responsed->idStatement;
+            
             // Extacting Results Fee Navigator.
             $ch = curl_init();
             curl_setopt( $ch , CURLOPT_URL , 'https://developer.feenavigator.com/api/v1/statements/get-datapoints/'. $id); 
