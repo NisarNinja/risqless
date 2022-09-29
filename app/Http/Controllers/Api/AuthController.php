@@ -185,7 +185,7 @@ class AuthController extends Controller
              'company.required' => 'Company Name is Required',
              'email.required'=>'Email is Required',
              'email.email'=>'Email format is invalid',
-             'email.unique'=>'Email already exsists',
+             'email.unique'=>'Email already exists',
              'password.required'=>'Password is required',
              'password.min'=>'Password Minimum Length should be 6',
              'password.confirmed'=>'Password does not match',
@@ -668,13 +668,6 @@ class AuthController extends Controller
 
         if($user){
             $user = $user->activateTrial();
-
-            // Send Push Notification
-            $this->fcm(
-                $this->getUserDevices($user->id),
-                'Congratulations',
-                'Your have successfully subscribed to the trial plan'
-            );
         }
 
        $response["header"]["return_flag"]="1";
