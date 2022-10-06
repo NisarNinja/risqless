@@ -378,31 +378,31 @@
                 if(response.status == 'true'){
                 var startDate, endDate, merchantName, totalVolume, totalFees, effectiveRate, avoidableFees, uploadedFile, count;
 
-                $.each(response.data, function(){
-                    if(this.name == 'Statement Period Start'){
-                        startDate = this.formattedValue;
+                $.each(response.data, function(i,item){
+                    if(item == 'Statement Period Start'){
+                        startDate = item[i];
                     }
-                    if(this.name == 'Statement Period End'){
-                        endDate = this.formattedValue;
+                    if(item == 'Statement Period End'){
+                        endDate = item[i];
                     }
-                    if(this.name == 'Merchant Name'){
-                        merchantName = this.formattedValue;
+                    if(item == 'Merchant Name'){
+                        merchantName = item[i];
                     }
-                    if(this.name == 'Total Volume'){
-                        totalVolume = this.formattedValue;
+                    if(item == 'Total Volume'){
+                        totalVolume = item[i];
                     }
-                    if(this.name == 'Total Fees'){
-                        totalFees = this.formattedValue;
+                    if(item == 'Total Fees'){
+                        totalFees = item[i];
                     }
-                    if(this.name == 'Effective Rate'){
-                        effectiveRate = this.formattedValue;
+                    if(item == 'Effective Rate'){
+                        effectiveRate = item[i];
                     }
-                    if(this.name == 'Avoidable Fees'){
-                        if(this.formattedValue == null){
+                    if(item == 'Avoidable Fees'){
+                        if(item[i] == null){
                             avoidableFees = '0.00';
                         }
                         else{
-                            avoidableFees = this.formattedValue;
+                            avoidableFees = item[i];
                         }
                         
                     }
@@ -725,31 +725,31 @@
                              if(response.status == 'true'){
                 var startDate, endDate, merchantName, totalVolume, totalFees, effectiveRate, avoidableFees, uploadedFile, count;
 
-                $.each(response.data, function(){
-                    if(this.name == 'Statement Period Start'){
-                        startDate = this.formattedValue;
+                $.each(response.data, function(i, item){
+                    if(item == 'Statement Period Start'){
+                        startDate = item[i];
                     }
-                    if(this.name == 'Statement Period End'){
-                        endDate = this.formattedValue;
+                    if(item == 'Statement Period End'){
+                        endDate = item[i];
                     }
-                    if(this.name == 'Merchant Name'){
-                        merchantName = this.formattedValue;
+                    if(item == 'Merchant Name'){
+                        merchantName = item[i];
                     }
-                    if(this.name == 'Total Volume'){
-                        totalVolume = this.formattedValue;
+                    if(item == 'Total Volume'){
+                        totalVolume = item[i];
                     }
-                    if(this.name == 'Total Fees'){
-                        totalFees = this.formattedValue;
+                    if(item == 'Total Fees'){
+                        totalFees = item[i];
                     }
-                    if(this.name == 'Effective Rate'){
-                        effectiveRate = this.formattedValue;
+                    if(item == 'Effective Rate'){
+                        effectiveRate = item[i];
                     }
-                    if(this.name == 'Avoidable Fees'){
-                        if(this.formattedValue == null){
+                    if(item == 'Avoidable Fees'){
+                        if(item[i] == null){
                             avoidableFees = '0.00';
                         }
                         else{
-                            avoidableFees = this.formattedValue;
+                            avoidableFees = item[i];
                         }
                         
                     }
