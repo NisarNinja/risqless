@@ -85,6 +85,9 @@ class FileUploadController extends Controller
 
         curl_close ($ch);
 
+        $response = collect($response);
+        $response = $response->toArray();
+
         $data = [
           'data' => $response,
           'file' => $fileName,
@@ -96,31 +99,31 @@ class FileUploadController extends Controller
         $post->statement = $fileName;
 
         foreach ($response as $key => $value) {
-            if($value->name == 'Statement Period Start'){
-                $post->start_date = $value->formattedValue;
+            if($key == 'Statement Period Start'){
+                $post->start_date = $value;
             }
-            if($value->name == 'Statement Period End'){
-                $post->end_date = $value->formattedValue;
+            if($key == 'Statement Period End'){
+                $post->end_date = $value;
             }
-            if($value->name == 'Merchant Name'){
-                $post->business_name = $value->formattedValue;
+            if($key == 'Merchant Name'){
+                $post->business_name = $value;
             }
-            if($value->name == 'Total Volume'){
-                $post->total_volume = $value->formattedValue;
+            if($key == 'Total Volume'){
+                $post->total_volume = $value;
             }
-            if($value->name == 'Total Fees'){
-                $post->total_fees = $value->formattedValue;
+            if($key == 'Total Fees'){
+                $post->total_fees = $value;
             }
-            if($value->name == 'Effective Rate'){
-                $post->effective_rate = $value->formattedValue;
+            if($key == 'Effective Rate'){
+                $post->effective_rate = $value;
             }
-            if($value->name == 'Avoidable Fees'){
+            if($key == 'Avoidable Fees'){
 
-                if($value->formattedValue == null){
+                if($value == null){
                     $post->avoidable_fees = '0.00';
                 }
                 else{
-                    $post->avoidable_fees = $value->formattedValue;
+                    $post->avoidable_fees = $value;
                 }
                         
             }
