@@ -85,6 +85,8 @@ class FileUploadController extends Controller
 
         curl_close ($ch);
 
+        $response = $response->toArray();
+        $response = collect($response);
         
         $data = [
             'data' => $response,
@@ -92,8 +94,6 @@ class FileUploadController extends Controller
             'status' => 'true',
         ];
         
-        $response = collect($response);
-        $response = $response->toArray();
         $post = new Post;
         $post->user_id = Auth::id();
         $post->statement = $fileName;
