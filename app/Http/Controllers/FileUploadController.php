@@ -85,8 +85,8 @@ class FileUploadController extends Controller
 
         curl_close ($ch);
 
-        $response = $response->toArray();
         $response = collect($response);
+        $response = $response->toArray();
         
         $data = [
             'data' => $response,
