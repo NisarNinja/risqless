@@ -131,6 +131,8 @@ class FileUploadController extends Controller
 
         $post->save();
 
+        $data['data'] = $post;
+
         return response()->json($data);
 
         /*  ##################################
