@@ -85,15 +85,15 @@ class FileUploadController extends Controller
 
         curl_close ($ch);
 
+        
+        $data = [
+            'data' => $response,
+            'file' => $fileName,
+            'status' => 'true',
+        ];
+        
         $response = collect($response);
         $response = $response->toArray();
-
-        $data = [
-          'data' => $response,
-          'file' => $fileName,
-          'status' => 'true',
-        ];
-
         $post = new Post;
         $post->user_id = Auth::id();
         $post->statement = $fileName;
