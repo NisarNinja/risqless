@@ -714,11 +714,15 @@ class AuthController extends Controller
                 $response["header"]["return_flag"]="1";
                 $response["header"]["error_detail"]='Congratulations,You are successfully subscribed to the trial plan';
                 $response["header"]["errors"] = (Object)[];
+            }else{
+                $response["header"]["return_flag"]="X";
+                $response["header"]["error_detail"]='No plans found.';
+                $response["header"]["errors"] = (Object)[];
             }
         } else {
             
             $response["header"]["return_flag"]="X";
-            $response["header"]["error_detail"]='Error creating subscription. ' . $e->getMessage();
+            $response["header"]["error_detail"]='Payment Token is required.';
             $response["header"]["errors"] = (Object)[];
         }
         
