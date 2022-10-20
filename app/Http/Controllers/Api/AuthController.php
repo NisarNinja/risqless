@@ -1,22 +1,23 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use Auth;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Laravel\Cashier\Cashier;
 use Mail;
 use Socialite;
 use \Stripe\Stripe;
+use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Laravel\Cashier\Cashier;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class AuthController extends Controller
 {
@@ -678,6 +679,50 @@ class AuthController extends Controller
 
        return $response;
 
+    }
+
+    public function processSubscription(Request $request)
+    {
+        if ($request->payment_method) {
+            
+            $hc=new HomeController;
+            
+            if (count($hc->retrievePlans())) {
+                $plan= $hc->retrievePlans()[0]->id ;
+                $user = auth()->user();
+                $paymentMethod = $request->payment_method;
+         
+                $user->createOrGetStripeCustomer();
+                $user->addPaymentMethod($paymentMethod);
+                try {
+                    $user->newSubscription('default', $plan)->trialDays(7)->create($paymentMethod, [
+                        'email' => $user->email,
+                    ]);
+         
+                } catch (\Exception $e) {
+                    $response["header"]["return_flag"]="X";
+                    $response["header"]["error_detail"]='Error creating subscription. ' . $e->getMessage();
+                    $response["header"]["errors"] = (Object)[];
+                }
+            
+                $this->fcm(
+                    $this->getUserDevices($user->id),
+                    'Congratulations',
+                    'You are successfully subscribed to the trial plan'
+                );
+        
+                $response["header"]["return_flag"]="1";
+                $response["header"]["error_detail"]='Congratulations,You are successfully subscribed to the trial plan';
+                $response["header"]["errors"] = (Object)[];
+            }
+        } else {
+            
+            $response["header"]["return_flag"]="X";
+            $response["header"]["error_detail"]='Error creating subscription. ' . $e->getMessage();
+            $response["header"]["errors"] = (Object)[];
+        }
+        
+        return $response;
     }
 
     // Overiding the Trait Method

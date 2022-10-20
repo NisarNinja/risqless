@@ -61,6 +61,8 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
     Route::get('notifications','NotificationController@index');
 
     Route::post('trial/activate','AuthController@activateTrial');
+    
+    Route::post('subscribe','AuthController@processSubscription');
 
     Route::get('in-app-purchase-status','InAppPurchaseController@statusUpdate');
 });
