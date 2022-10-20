@@ -366,7 +366,7 @@ class UserLoginController extends Controller
     // Facebook Login
     public function facebookRedirect(Request $request)
     {
-        return Socialite::driver('facebook')->redirect();
+        return Socialite::driver('facebook')->with(['redirect_uri' => route('facebook.callback')])->redirect();
     }
 
     public function loginWithFacebook()

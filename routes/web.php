@@ -115,7 +115,7 @@ Route::get('/callback-google', 'App\Http\Controllers\AuthUser\UserLoginControlle
 // Facebook Login
 
 Route::get('auth/facebook', 'App\Http\Controllers\AuthUser\UserLoginController@facebookRedirect')->name('facebook.login');
-Route::get('auth/facebook/callback', 'App\Http\Controllers\AuthUser\UserLoginController@loginWithFacebook');
+Route::get('auth/facebook/callback', 'App\Http\Controllers\AuthUser\UserLoginController@loginWithFacebook')->name('facebook.callback');
 
 
 // Stripe Subscriptions
