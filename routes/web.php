@@ -128,5 +128,7 @@ Route::post('/resume-subscribe','App\Http\Controllers\SubscriptionController@res
 
 Route::post('/cancel-trial','App\Http\Controllers\SubscriptionController@cancelTrial')->name('cancelTrial');
 
-
+Route::get("/privacy-policy",function(){
+  return view("user.pages.privacy-policy");
+});
 
