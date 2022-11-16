@@ -252,11 +252,11 @@ class AuthController extends Controller
                 'name' => $request->input('fname'),
                 'email' => $request->input('email'),
             );
-            Mail::send('email.welcome_email', $email_data, function ($message) use ($email_data) {
-                $message->to($email_data['email'], $email_data['name'])
-                    ->subject('Welcome to Risqless')
-                    ->from('info@risqless.ai', 'Risqless');
-            });
+            // Mail::send('email.welcome_email', $email_data, function ($message) use ($email_data) {
+            //     $message->to($email_data['email'], $email_data['name'])
+            //         ->subject('Welcome to Risqless')
+            //         ->from('info@risqless.ai', 'Risqless');
+            // });
            $response["header"]["return_flag"]="true";
            $response["data"]= new UserResource($user);
         }

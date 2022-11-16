@@ -1,0 +1,14 @@
+{
+    "i18n-ally.localesPaths": [
+        "resources/lang",
+        "public/admin/images/lang",
+        "public/admin/js/plugins/editors/ckeditor/lang",
+        "public/admin/js/plugins/editors/summernote/lang",
+        "public/admin/js/plugins/pickers/color/i18n",
+        "public/admin/js/plugins/tables/handsontable/languages",
+        "public/admin/js/plugins/uploaders/plupload/i18n",
+        "public/admin/js/plugins/ui/fullcalendar/core/locales",
+        "public/admin/js/plugins/editors/ckeditor/plugins/a11yhelp/dialogs/lang",
+        "public/admin/js/plugins/editors/ckeditor/plugins/specialchar/dialogs/lang"
+    ]
+}
