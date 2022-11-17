@@ -49,6 +49,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
         Route::post('facebook-login','AuthController@loginWithFacebook');
         Route::post('google-login','AuthController@googleLogin');
         Route::post('apple-login','AuthController@appleLogin');
+        Route::post('/social_authenticate', 'AuthController@socialAuthenticate')->name('social_authenticate');
 
         Route::post('forget-password','AuthController@sendResetLinkEmail');
     });
@@ -63,6 +64,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
     Route::post('trial/activate','AuthController@activateTrial');
     
     Route::post('subscribe','AuthController@processSubscription');
+    Route::post('cancel_subscription', 'AuthController@cancelSubscription');
 
     Route::get('in-app-purchase-status','InAppPurchaseController@statusUpdate');
 });

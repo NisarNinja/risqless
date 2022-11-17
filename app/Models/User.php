@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Carbon\Carbon;
+use App\Models\Post;
+use App\Models\UserProfile;
+use Illuminate\Support\Str;
+use Laravel\Cashier\Billable;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Notifications\PasswordResetNotification;
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Support\Str;
-use App\Models\UserProfile;
-use App\Models\Post;
-use Laravel\Cashier\Billable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use App\Notifications\PasswordResetNotification;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {   
@@ -85,4 +86,43 @@ class User extends Authenticatable
         return $this;
 
     }
+
+    public function latest_subscription()
+    {
+        return $this->subscriptions()->latest()->first(); 
+    }
+
+    public function active_subscription()
+    {
+        $sub=$this->subscriptions()->where(function($q){
+            $q->whereDate('trial_ends_at','>',now());
+        })->orWhere(function($q){
+            $q->whereDate('ends_at','>',now());
+        });
+        
+        if ($sub) {
+            return $sub->latest()->first();
+        }
+        return false;
+    }
+
+    public function trialDate()
+    {
+        $sub=$this->subscriptions()->latest()->first();
+        if ($sub && $sub->trial_ends_at ) {
+            return $sub;
+        }
+        return false;
+    }
+
+    // subscriptions trial has ended
+    public function isTrialActive()
+    {
+        $sub=$this->subscriptions()->latest()->first();
+        if ($sub && $sub->trial_ends_at && Carbon::parse($sub->trial_ends_at)->lt(now()) ) {
+            return false;
+        }
+        return true;
+    }
+
 }
