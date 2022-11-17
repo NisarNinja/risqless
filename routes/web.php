@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthUser\UserLoginController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\HomeController;
 use App\Http\Middleware\CheckStatus;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthUser\UserLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,5 +131,19 @@ Route::post('/cancel-trial','App\Http\Controllers\SubscriptionController@cancelT
 
 Route::get("/privacy-policy",function(){
   return view("user.pages.privacy-policy");
+});
+Route::get("/test-mail",function(){
+  $email_data = array(
+    'name' => 'test',
+    'email' => 'jawadahmed1024@gmail.com',
+  );
+
+  Mail::send('email.welcome_email', $email_data, function ($message) use ($email_data) {
+      $message->to($email_data['email'], $email_data['name'])
+          ->subject('Welcome to Risqless')
+          ->from('info@risqless.ai', 'Risqless');
+  });
+
+  return 123;
 });
 
