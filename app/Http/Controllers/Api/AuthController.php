@@ -961,4 +961,28 @@ class AuthController extends Controller
         
         return $res;
     }
+
+    /**
+     * remove_account
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function remove_account(Request $request)
+    {
+        $user=User::where('id',$request->user_id)->first();
+        if ($request->user_id && $user) {
+            $user->delete();
+
+            $response["header"]["return_flag"]="1";
+            $response["header"]["error_detail"]='Account has been removed';
+            $response["header"]["errors"] = (Object)[];
+        } else {
+            $response["header"]["return_flag"]="X";
+            $response["header"]["error_detail"]='User Not found';
+            $response["header"]["errors"] = (Object)[];
+        }
+        
+        return response()->json($response);
+    }
 }

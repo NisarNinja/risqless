@@ -65,6 +65,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
     
     Route::post('subscribe','AuthController@processSubscription');
     Route::post('cancel_subscription', 'AuthController@cancelSubscription');
+    Route::post('remove_account', 'AuthController@remove_account');
 
     Route::get('in-app-purchase-status','InAppPurchaseController@statusUpdate');
 });
