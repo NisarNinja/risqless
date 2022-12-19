@@ -92,7 +92,7 @@ class User extends Authenticatable
         return $this->subscriptions()->latest()->first(); 
     }
 
-    public function active_subscription()
+    public function active_subscription($type = 'normal')
     {
         $sub=$this->subscriptions()->where(function($q){
             $q->whereDate('trial_ends_at','>',now());
@@ -100,8 +100,11 @@ class User extends Authenticatable
             $q->whereDate('ends_at','>',now());
         });
         
-        if ($sub) {
-            return $sub->latest()->first();
+        if($sub = $sub->latest()->first()){
+            if($type == 'boolean'){
+                return true;
+            }
+            return $sub;
         }
         return false;
     }
