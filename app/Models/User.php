@@ -122,7 +122,7 @@ class User extends Authenticatable
     public function isTrialActive()
     {
         $sub=$this->subscriptions()->latest()->first();
-        if ($sub && $sub->trial_ends_at && Carbon::parse($sub->trial_ends_at)->lt(now()) ) {
+        if (!$sub || ($sub && $sub->trial_ends_at && Carbon::parse($sub->trial_ends_at)->lt(now())) ) {
             return false;
         }
         return true;
