@@ -256,8 +256,7 @@ class AuthController extends Controller
             );
             Mail::send('email.welcome_email', $email_data, function ($message) use ($email_data) {
                 $message->to($email_data['email'], $email_data['name'])
-                    ->subject('Welcome to Risqless')
-                    ->from('no-reply@risqless.ai', 'Risqless');
+                    ->subject('Welcome to Risqless');
             });
            $response["header"]["return_flag"]="true";
            $response["data"]= new UserResource($user);
