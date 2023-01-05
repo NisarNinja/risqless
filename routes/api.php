@@ -45,6 +45,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function()
 
     Route::group(['prefix' =>'auth'], function () {
         Route::post('signup',  'AuthController@process_signup');
+        Route::post('signup_trial',  'AuthController@signupWithTrial');
         Route::post('login',  'AuthController@login');
         Route::post('facebook-login','AuthController@loginWithFacebook');
         Route::post('google-login','AuthController@googleLogin');

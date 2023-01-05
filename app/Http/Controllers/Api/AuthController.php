@@ -263,6 +263,111 @@ class AuthController extends Controller
         }
         return response()->json($response);
     }
+
+    
+    public function signupWithTrial(Request $request)
+    {
+
+        $response=[];
+         $response["header"]["return_flag"]="X";
+         $response["header"]["error_detail"]="";
+        $response["header"]["errors"] = [];
+         $response["data"]= (object) array();
+        $rules = [
+            'fname' => 'required',
+            'lname' => 'required',
+            'company' => 'required',
+            'email'=>'required|email|unique:users',
+            'password' => 'required|confirmed|min:6|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+            'payment_method' => 'required',
+        ];
+        $messages=[
+             'fname.required' => 'First Name is Required',
+             'lname.required' => 'Last Name is Required',
+             'company.required' => 'Company Name is Required',
+             'email.required'=>'Email is Required',
+             'email.email'=>'Email format is invalid',
+             'email.unique'=>'Email already exists',
+             'password.required'=>'Password is required',
+             'password.min'=>'Password Minimum Length should be 6',
+             'password.confirmed'=>'Password does not match',
+             'password.regex'=>'Password must contain at least one lowercase , one uppercase, one number and one symbol',
+        ];
+
+
+        $validator = Validator::make($request->all(), $rules,$messages);
+        if ($validator->fails()) {
+           $response["header"]["return_flag"]="X";
+           $response["header"]["error_detail"]="validation error";
+           $response["header"]["errors"] = $validator->messages();
+        }
+        else
+        {
+            $arr = array(
+            'properties' => array(
+                array(
+                    'property' => 'email',
+                    'value' => $request->input('email')
+                ),
+                array(
+                    'property' => 'firstname',
+                    'value' => $request->input('fname')
+                ),
+                array(
+                    'property' => 'lastname',
+                    'value' => $request->input('lname')
+                ),
+            )
+        );
+            $post_json = json_encode($arr);
+
+            $hapikey = "d18e851d-d8e1-451c-b4b6-6dfd135aeca3";
+            $endpoint = 'https://api.hubapi.com/contacts/v1/contact?hapikey=' . $hapikey;
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
+            curl_setopt($ch, CURLOPT_URL, $endpoint);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $responsee = curl_exec($ch);
+            if (curl_errno($ch)) {
+
+                print_r(curl_error($ch));
+                exit;
+            }
+            curl_close ($ch);
+            $name = trim($request->input('fname')) . ' ' . trim($request->input('lname'));
+            $user = User::create([
+                'name' => $name,
+                'email' => strtolower($request->input('email')),
+                'password' => bcrypt($request->input('password')),
+                'role' => 'subscriber',
+                'company' => $request->input('company'),
+            ]);
+
+            $res_=$this->startSubscription($request,$user);
+
+            // if res header is not 1, then return $res
+            if ($res_["header"]["return_flag"] == "X") {
+                return $res_;
+            }
+
+            $email_data = array(
+                'name' => $request->input('fname'),
+                'email' => $request->input('email'),
+            );
+            Mail::send('email.welcome_email', $email_data, function ($message) use ($email_data) {
+                $message->to($email_data['email'], $email_data['name'])
+                    ->subject('Welcome to Risqless');
+            });
+           $response["header"]["return_flag"]="true";
+           $response["data"]= new UserResource($user);
+        }
+        return response()->json($response);
+    }
+
     public function logout()
     {
         \Auth::logout();
@@ -690,19 +795,24 @@ class AuthController extends Controller
      */
     public function processSubscription(Request $request)
     {
+        return $this->startSubscription($request,auth()->user());
+    }
+
+    public function startSubscription(Request $request,$user=null)
+    {
         if ($request->payment_method) {
             
             $hc=new HomeController;
             
             if (count($hc->retrievePlans())) {
                 $plan= $hc->retrievePlans()[0]->id ;
-                $user = auth()->user();
+                $user = $user;
                 $paymentMethod = $request->payment_method;
          
-                $user->createOrGetStripeCustomer();
-                $user->addPaymentMethod($paymentMethod);
                 try {
-                    $user->newSubscription('default', $plan)->trialDays(7)->create($paymentMethod, [
+                    $user->createOrGetStripeCustomer();
+                    $user->addPaymentMethod($paymentMethod);
+                    $user->newSubscription('default', $plan)->trialDays(30)->create($paymentMethod, [
                         'email' => $user->email,
                     ]);
          
@@ -710,6 +820,9 @@ class AuthController extends Controller
                     $response["header"]["return_flag"]="X";
                     $response["header"]["error_detail"]='Error creating subscription. ' . $e->getMessage();
                     $response["header"]["errors"] = (Object)[];
+
+                    return $response;
+
                 }
             
                 $this->fcm(
