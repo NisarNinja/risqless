@@ -1097,4 +1097,27 @@ class AuthController extends Controller
         
         return response()->json($response);
     }
+    
+    /**
+     * Get the authenticated User
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        $user=User::where('id',$request->user_id)->first();
+        if ($request->user_id && $user) {
+
+            $response["header"]["return_flag"]="1";
+            $response["header"]["error_detail"]='Account has been removed';
+            $response["header"]["errors"] = (Object)[];
+            $response["data"] = new UserResource($user);
+        } else {
+            $response["header"]["return_flag"]="X";
+            $response["header"]["error_detail"]='Unautheticated';
+            $response["header"]["errors"] = (Object)[];
+        }
+        
+        return response()->json($response);
+    }
 }
