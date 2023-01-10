@@ -984,12 +984,13 @@ class AuthController extends Controller
     public function createNewUser($social_user,$provider){
         $user = User::where(['email' => $social_user['email']])->first();
         if(!$user){
+            $name = trim($social_user['first_name'] ?? '') . ' ' . trim($social_user['last_name'] ?? '');
             $user = User::forceCreate([
-                'first_name'        => $social_user['first_name'] ?? '',
-                'last_name'         => $social_user['last_name'] ?? '',
+                'name' => $name,
                 'email'             => $social_user['email'] ?? '',
-                'profile_image'             => $social_user['image'] ?? '',
-                'password'          => Str::random(40),
+                'profile_image'     => $social_user['image'] ?? '',
+                'password'          => bcrypt(Str::random(10)),
+                'role'              => 'subscriber',
                 'email_verified_at' => now(),
                 'provider'          => $provider,
             ]);
