@@ -962,7 +962,7 @@ class AuthController extends Controller
             $response["header"]["return_flag"]="1";
             $response["header"]["error_detail"]='Signup Successfull';
             $response["header"]["errors"] = (Object)[];
-            $response["data"]= new UserResource($user_data);
+            $response["data"]= new UserResource($user_data['user']);
 
         } else {
             $response["header"]["return_flag"]="X";
