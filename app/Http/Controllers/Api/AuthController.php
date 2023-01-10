@@ -1105,7 +1105,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function me(Request $request)
     {
         $user=User::where('id',$request->user_id)->first();
         if ($request->user_id && $user) {

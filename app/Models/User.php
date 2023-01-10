@@ -99,8 +99,8 @@ class User extends Authenticatable
         })->orWhere(function($q){
             $q->whereDate('ends_at','>',now());
         });
-        
-        if($sub = $sub->latest()->first()){
+        $sub = $sub->latest()->first();
+        if(count($sub)){
             if($type == 'boolean'){
                 return true;
             }
