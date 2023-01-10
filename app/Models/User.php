@@ -100,7 +100,7 @@ class User extends Authenticatable
             $q->whereDate('ends_at','>',now());
         });
         $sub = $sub->latest()->first();
-        if(count($sub)){
+        if($sub){
             if($type == 'boolean'){
                 return true;
             }
