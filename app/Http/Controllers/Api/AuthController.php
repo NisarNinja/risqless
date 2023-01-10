@@ -795,7 +795,8 @@ class AuthController extends Controller
      */
     public function processSubscription(Request $request)
     {
-        return $this->startSubscription($request,auth()->user());
+        $user=User::where('id',$request->user_id)->first();
+        return $this->startSubscription($request,$user);
     }
 
     public function startSubscription(Request $request,$user=null)
@@ -834,6 +835,7 @@ class AuthController extends Controller
                 $response["header"]["return_flag"]="1";
                 $response["header"]["error_detail"]='Congratulations,You are successfully subscribed to the trial plan';
                 $response["header"]["errors"] = (Object)[];
+                $response['data'] = new UserResource($user);
             }else{
                 $response["header"]["return_flag"]="X";
                 $response["header"]["error_detail"]='No plans found.';
