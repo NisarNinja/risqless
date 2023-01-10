@@ -37,6 +37,7 @@ class UserResource extends JsonResource
         $array['latest_subscription_date'] = $is_subscription_active ? $is_subscription_active->created_at : '';
         $array['is_trial_active'] = $this->isTrialActive();
         $array['trial_ends_at'] = $this->trialDate() ? Carbon::parse($this->trialDate()->trial_ends_at)->format('Y-m-d h:i') : false;
+        $array['provider'] = $this->provider;
         // dd($this->subscriptions);
         // transform user subscriptions
         $array['subscriptions'] =$this->subscriptions()->latest()->get()->transform(function($item, $key) {

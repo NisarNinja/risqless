@@ -931,6 +931,7 @@ class AuthController extends Controller
             'provider'           => 'required|string',
             'access_token'   => 'required|string',
             'device_id'   => 'required|string',
+            'fb_user_id' => 'required_if:provider,==,facebook',
         ]);
 
         if ($validator->fails()) {
@@ -946,7 +947,7 @@ class AuthController extends Controller
             return response()->json($error_res);
         }
 
-        $res=$this->getUserInfo($request->access_token,$request->provider);
+        $res=$this->getUserInfo($request->access_token,$request->provider,$request);
         
         if (isset($res['data']) && isset($res['data']['email']) ) {
             $user_data = $this->createNewUser($res['data'],$request->provider);
@@ -1008,7 +1009,7 @@ class AuthController extends Controller
      * @param [type] $provider
      * @return void
      */
-    public function getUserInfo($access_token,$provider)
+    public function getUserInfo($access_token,$provider,$request)
     {
         $curl = curl_init();
 
@@ -1019,7 +1020,7 @@ class AuthController extends Controller
                 "Content-Type: application/json",
             ];
         } else if($provider == 'facebook') {
-            $curl_url="https://graph.facebook.com/me?access_token=".$access_token;
+            $curl_url="https://graph.facebook.com/".$request->fb_user_id."?fields=id,first_name,last_name,email,picture&access_token=".$access_token;
             $curl_header=[
                 "Accept: application/json",
                 "Content-Type: application/json",
