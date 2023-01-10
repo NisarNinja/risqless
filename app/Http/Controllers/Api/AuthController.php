@@ -951,13 +951,13 @@ class AuthController extends Controller
         if (isset($res['data']) && isset($res['data']['email']) ) {
             $user_data = $this->createNewUser($res['data'],$request->provider);
             
-            $device = Device::where('user_id',$user_data['user']->id)->where('device_id',$request->device_id)->first();
+            /* $device = Device::where('user_id',$user_data['user']->id)->where('device_id',$request->device_id)->first();
             if(!$device && $request->device_id){
                 Device::create([
                     'user_id' => $user_data['user']->id,
                     'device_id' => $request->device_id,
                 ]);
-            }
+            } */
 
             $response["header"]["return_flag"]="1";
             $response["header"]["error_detail"]='Signup Successfull';
