@@ -988,7 +988,7 @@ class AuthController extends Controller
             $user = User::forceCreate([
                 'name' => $name,
                 'email'             => $social_user['email'] ?? '',
-                'profile_image'     => $social_user['image'] ?? '',
+                'original_avatar'     => $social_user['image'] ?? '',
                 'password'          => bcrypt(Str::random(10)),
                 'role'              => 'subscriber',
                 'email_verified_at' => now(),
