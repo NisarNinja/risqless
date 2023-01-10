@@ -95,10 +95,12 @@ class User extends Authenticatable
     public function active_subscription($type = 'normal')
     {
         $sub=$this->subscriptions()->where(function($q){
-            $q->whereDate('trial_ends_at','>',now());
-        })->orWhere(function($q){
-            $q->whereDate('ends_at','>',now());
-        })->orderByDesc('created_at')->first();
+            $q->where(function($q){
+                $q->whereDate('trial_ends_at','>',now());
+            })->orWhere(function($q){
+                $q->whereDate('ends_at','>',now());
+            });
+        })->where('user_id',$this->id)->latest()->first();
         
         if($sub){
             if($type == 'boolean'){
