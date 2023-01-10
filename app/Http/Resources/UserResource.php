@@ -33,7 +33,7 @@ class UserResource extends JsonResource
         $is_subscription_active = $this->active_subscription();
 
         $array = parent::toArray($request);
-        $array['is_subscription_active'] = $is_subscription_active ? true : false;
+        $array['is_subscription_active'] = $is_subscription_active;
         $array['latest_subscription_date'] = $is_subscription_active ? $is_subscription_active->created_at : '';
         $array['is_trial_active'] = $this->isTrialActive();
         $array['trial_ends_at'] = $this->trialDate() ? Carbon::parse($this->trialDate()->trial_ends_at)->format('Y-m-d h:i') : false;
