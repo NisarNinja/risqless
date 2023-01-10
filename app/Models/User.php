@@ -98,7 +98,7 @@ class User extends Authenticatable
             $q->whereDate('trial_ends_at','>',now());
         })->orWhere(function($q){
             $q->whereDate('ends_at','>',now());
-        })->latest()->first();
+        })->orderByDesc('created_at')->first();
         
         if($sub){
             if($type == 'boolean'){
