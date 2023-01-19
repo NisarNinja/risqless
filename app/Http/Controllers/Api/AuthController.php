@@ -1090,7 +1090,7 @@ class AuthController extends Controller
         if ($request->user_id && $user) {
             $user->delete();
 
-            $response["header"]["return_flag"]="1";
+            $response["header"]["return_flag"]="true";
             $response["header"]["error_detail"]='Account has been removed';
             $response["header"]["errors"] = (Object)[];
         } else {
