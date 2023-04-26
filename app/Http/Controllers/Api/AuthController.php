@@ -818,7 +818,7 @@ class AuthController extends Controller
                 try {
                     $user->createOrGetStripeCustomer();
                     $user->addPaymentMethod($paymentMethod);
-                    $user->newSubscription('default', $plan)->trialDays(30)->create($paymentMethod, [
+                    $user->newSubscription('default', $plan)/* ->trialDays(30) */->create($paymentMethod, [
                         'email' => $user->email,
                     ]);
          
