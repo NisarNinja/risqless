@@ -835,11 +835,11 @@ class AuthController extends Controller
                 $this->fcm(
                     $this->getUserDevices($user->id),
                     'Congratulations',
-                    'You are successfully subscribed to the trial plan'
+                    'You are successfully subscribed'
                 );
         
                 $response["header"]["return_flag"]="1";
-                $response["header"]["error_detail"]='Congratulations,You are successfully subscribed to the trial plan';
+                $response["header"]["error_detail"]='Congratulations,You are successfully subscribed';
                 $response["header"]["errors"] = (Object)[];
                 $response['data'] = new UserResource($user);
             }else{
