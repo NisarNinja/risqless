@@ -801,7 +801,15 @@ class AuthController extends Controller
     public function processSubscription(Request $request)
     {
         $user=User::where('id',$request->user_id)->first();
-        return $this->startSubscription($request,$user);
+        if ($user) {
+            return $this->startSubscription($request,$user);
+        } else {
+            $response["header"]["return_flag"]="X";
+            $response["header"]["error_detail"]='User not found';
+            $response["header"]["errors"] = (Object)[];
+
+            return $response;
+        }
     }
 
     public function startSubscription(Request $request,$user=null)
