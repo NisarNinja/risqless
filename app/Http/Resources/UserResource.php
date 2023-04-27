@@ -30,7 +30,7 @@ class UserResource extends JsonResource
         }
 
         // Check if Subscription is active or not
-        $is_subscription_active = $this->active_subscription();
+        $is_subscription_active = $this->active_subscription('boolean');
 
         $array = parent::toArray($request);
         $array['is_subscription_active'] = $is_subscription_active;
