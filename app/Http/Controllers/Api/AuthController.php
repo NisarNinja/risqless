@@ -818,10 +818,11 @@ class AuthController extends Controller
                 try {
                     $user->createOrGetStripeCustomer();
                     $user->addPaymentMethod($paymentMethod);
-                    $user->newSubscription('default', $plan)/* ->trialDays(30) */->create($paymentMethod, [
+                    $subscription =$user->newSubscription('default', $plan)/* ->trialDays(30) */->create($paymentMethod, [
                         'email' => $user->email,
                     ]);
-         
+                    $subscription->ends_at = Carbon::createFromTimestamp($subscription->asStripeSubscription()->current_period_end);
+                    $subscription->save();
                 } catch (\Exception $e) {
                     $response["header"]["return_flag"]="X";
                     $response["header"]["error_detail"]='Error creating subscription. ' . $e->getMessage();
