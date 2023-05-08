@@ -41,7 +41,7 @@ class UserResource extends JsonResource
         // dd($this->subscriptions);
         
 
-        $array['subscriptions'];
+        $array['subscriptions']=[];
         if ($this->subscriptions()->count()) {
             $array['subscriptions']=[
                 'id' => $this->subscriptions()->latest()->first()->stripe_id,
