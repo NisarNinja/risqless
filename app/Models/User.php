@@ -123,8 +123,7 @@ class User extends Authenticatable
     // subscriptions trial has ended
     public function isTrialActive()
     {
-        $sub=$this->subscriptions()->latest()->first();
-        if (!$sub || ($sub && $sub->trial_ends_at && Carbon::parse($sub->trial_ends_at)->lt(now())) ) {
+        if ($this->trial_ends_at && Carbon::parse($this->trial_ends_at)->lt(now()) ) {
             return false;
         }
         return true;
