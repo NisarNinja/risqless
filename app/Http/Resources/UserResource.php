@@ -40,7 +40,7 @@ class UserResource extends JsonResource
         $array['provider'] = $this->provider;
         // dd($this->subscriptions);
         // transform user subscriptions
-        $array['subscriptions'] =$this->subscriptions()->latest()->get()->transform(function($item, $key) {
+        $array['subscriptions'] =$this->subscriptions()->latest()->first()->transform(function($item, $key) {
             return [
                 'id' => $item->stripe_id,
                 'subscription_start_date' => $item->created_at? Carbon::parse($item->created_at)->format('Y-m-d h:i') : null,
