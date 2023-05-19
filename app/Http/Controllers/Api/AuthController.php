@@ -1102,6 +1102,9 @@ class AuthController extends Controller
     {
         $user=User::where('id',$request->user_id)->first();
         if ($request->user_id && $user) {
+            if ($user->active_subscription()) {
+                $user->active_subscription()->cancel();
+            }
             $user->delete();
 
             $response["header"]["return_flag"]="true";
